@@ -15,6 +15,14 @@ int Generation = 0;
 // Time limit for the test case
 long long TimeLimit;
 
+void print_sol(SOL *s, FILE* file) {
+    for (int i = 0; i < N; i++) {
+        if (i > 0) fprintf(file, " ");
+        fprintf(file, "%d", s->ch[i] + 1);
+    }
+    fprintf(file, "----- %f\n", s->f);
+}
+
 // a "steady-state" GA
 void GA() {
 	int i;
@@ -23,6 +31,7 @@ void GA() {
 
 	for (i = 0; i < Psize; i++) {
 		gen_init_solution(&Population[i]);
+        print_sol(Population + i, stderr);
 	}
 
 	while (1) {
@@ -59,19 +68,14 @@ void init() {
 	Record.f = 1e100;
 }
 
-
 // print the best solution found to stdout
 void answer() {
-	int i;
-
-	for (i = 0; i < N; i++) {
-		if (i > 0) printf(" ");
-		printf("%d", Record.ch[i]+1);
-	}
-	printf("\n");
+    print_sol(&Record, stdout);
 }
 
 void init_params(int argc, char *argv[]){
+    //Params.represent = LocusBase;
+
     if (argc == 1) return;
     for (int i = 1; i < argc; i++){
         fprintf(stderr, "%s\n", argv[i]);
