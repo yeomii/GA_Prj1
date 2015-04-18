@@ -1,14 +1,31 @@
 #include "ga.h"
 
 extern int N;
+extern Parameter Params;
 
 // combine the given parents p1 and p2
 // and store the generated solution at c
 // currently the child will be same as p1
 void default_crossover(const SOL *p1, const SOL *p2, SOL *c);
+void cycle_crossover(const SOL *p1, const SOL *p2, SOL *c);
+void order_crossover(const SOL *p1, const SOL* p2, SOL *c);
+void pmx_crossover(const SOL *p1, const SOL* p2, SOL *c);
+
 
 void crossover(const SOL *p1, const SOL *p2, SOL *c) {
-	default_crossover(p1, p2, c);
+    switch (Params.crossover){
+    case Cycle:
+        cycle_crossover(p1, p2, c);
+        break;
+    case Order:
+        order_crossover(p1, p2, c);
+        break;
+    case PMX:
+        pmx_crossover(p1, p2, c);
+        break;
+    default:
+        default_crossover(p1, p2, c);
+    }
 	eval(c);
 }
 

@@ -26,11 +26,11 @@ typedef struct {
 
 typedef struct {
     Represent represent;
-    int fixed_vertex;
 
     GenSolution genSolution;
 
     Selection selection;
+    int roulette_k;
 
     Crossover crossover;
     Mutation mutation;

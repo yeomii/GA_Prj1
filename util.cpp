@@ -3,6 +3,7 @@
 extern int N;
 extern double Dist[MAXN][MAXN];
 extern SOL Record;
+extern SOL WorstRec;
 
 extern Parameter Params;
 
@@ -26,7 +27,13 @@ double eval(SOL *s) {
 		for (int i = 0; i < N; i++) {
 			Record.ch[i] = s->ch[i];
 		}
-	}
+    }
+    else if (WorstRec.f < s->f){
+        WorstRec.f = s->f;
+        for (int i = 0; i < N; i++) {
+            WorstRec.ch[i] = s->ch[i];
+        }
+    }
 
 	return s->f;
 }
