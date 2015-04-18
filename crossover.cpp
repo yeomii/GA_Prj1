@@ -1,4 +1,5 @@
 #include "ga.h"
+#include <set>
 
 extern int N;
 extern Parameter Params;
@@ -108,4 +109,55 @@ void pmx_crossover(const SOL *p1, const SOL* p2, SOL *c) {
 	}
 
 	delete[] pos;
+}
+
+// edge recombination은 order base representation에서만 의미를 가진다.
+void edge_recombination_crossover(const SOL *p1, const SOL* p2, SOL *c) {
+	std::set<int> adj[MAXN];
+	std::set<int> available_city;
+	
+	// 도시 c1, c2를 인접 도시로 등록한다.
+	auto reg = [&](int c1, int c2) {
+		adj[c1].insert(c2);
+		adj[c2].insert(c1);
+	};
+
+	// 도시 c1, c2를 인접 도시에서 삭제한다.
+	auto del = [&](int c1, int c2) {
+		adj[c1].erase(c2);
+		adj[c2].erase(c1);
+	};
+	
+	// 현재 도시에서 가야 할 다음 도시를 반환한다.
+	auto next = [&](int city) {
+		available_city.erase(city);
+		if (adj[city].empty()) {
+			return available_city.empty() ? -1 : *available_city.begin();
+		}
+		else {
+			// 가장 인접 도시 수(즉 degree)가 적은 인접 도시를 고른다.
+			int best_city, min_degree = 5;
+			for (int adj_city : adj[city]) {
+				int degree = adj[adj_city].size();
+				if (degree < min_degree) {
+					min_degree = degree;
+					best_city = adj_city;
+				}
+			}
+			while (!adj[city].empty())
+				del(city, *adj[city].begin());
+			return best_city;
+		}
+	};
+
+	for (int i = 0; i < N; i++) {
+		available_city.insert(p1->ch[i]);
+		reg(p1->ch[i], p1->ch[(i + 1) % N]);
+		reg(p2->ch[i], p2->ch[(i + 1) % N]);
+	}
+
+	for (int curr_city = 0, i = 0; curr_city != -1;) {
+		c->ch[i++] = curr_city;
+		curr_city = next(curr_city);
+	}
 }
