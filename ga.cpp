@@ -4,8 +4,12 @@ int N;
 int Psize = 100;
 double X[MAXN], Y[MAXN];
 double Dist[MAXN][MAXN];
+int Near[MAXN];
+
 SOL Population[MAXPSIZE];
 SOL Record;
+
+Parameter Params = {};
 int Generation = 0;
 
 // Time limit for the test case
@@ -67,12 +71,41 @@ void answer() {
 	printf("\n");
 }
 
+void init_params(int argc, char *argv[]){
+    if (argc == 1) return;
+    for (int i = 1; i < argc; i++){
+        fprintf(stderr, "%s\n", argv[i]);
+    }
+}
+
+void print_parameters(){
+    string fs;
+    fs.append("Represent : %s\n")
+        .append("GenSolution : %s\n")
+        .append("Selection : %s\n")
+        .append("Crossover : %s\n")
+        .append("Mutation : %s\n")
+        .append("Replacement : %s\n")
+        .append("Termination : %s\n");
+    fprintf(stderr, fs.c_str(),
+        str(Params.represent), str(Params.genSolution), str(Params.selection),
+        str(Params.crossover), str(Params.mutation), str(Params.replacement), str(Params.termination));
+}
 
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
-
+    //
+    freopen("cycle.in", "r", stdin);
+    freopen("cycle.out", "w", stdout);
+    //
+    fprintf(stderr, "executing init with cycle.in...\n");
 	init();
+    fprintf(stderr, "initializing GA parameters...\n");
+    init_params(argc, argv);
+    print_parameters();
+    fprintf(stderr, "starting GA...\n");
 	GA();
+    fprintf(stderr, "done\n");
 	answer();
 	return 0;
 }

@@ -1,1 +1,10 @@
 ga
+
+Debug/*
+*.opensdf
+*.sdf
+*.sln
+*.suo
+*.vcxproj*
+
+cycle.*

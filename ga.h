@@ -5,16 +5,49 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <string>
+using namespace std;
 
 #define MAXN 318
 #define MAXPSIZE 1000
+
+enum Represent { OrderBase, LocusBase };
+enum GenSolution { RandomGen, DFS };
+enum Selection { RandomSelect, Roulette, Tournament, Rank, Sharing };
+enum Crossover { Cycle, Order, PMX, EdgeRecombination };
+enum Mutation { Uniform, NonUniform, Change };
+enum Replacement { Worst, Preselection, Crowding };
+enum Termination { GenNumber, Similarity };
 
 typedef struct {
 	int ch[MAXN];
 	double f;	
 } SOL;
 
+typedef struct {
+    Represent represent;
+    int fixed_vertex;
+
+    GenSolution genSolution;
+
+    Selection selection;
+
+    Crossover crossover;
+    Mutation mutation;
+    Replacement replacement;
+
+    Termination termination;
+} Parameter;
+
 double eval(SOL *s);
+
+const char* str(enum Represent e);
+const char* str(enum GenSolution e);
+const char* str(enum Selection e);
+const char* str(enum Crossover e);
+const char* str(enum Mutation e);
+const char* str(enum Replacement e);
+const char* str(enum Termination e);
 
 void gen_init_solution(SOL *s);
 
