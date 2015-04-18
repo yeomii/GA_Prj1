@@ -31,6 +31,10 @@ typedef struct {
 
     Selection selection;
     int roulette_k;
+    int tournament_k;
+    double tournament_t;
+    double rank_max;
+    double rank_min;
 
     Crossover crossover;
     Mutation mutation;

@@ -1,4 +1,5 @@
 #include "ga.h"
+#include <algorithm>
 
 extern int Psize;
 extern SOL Population[MAXPSIZE];
@@ -8,8 +9,11 @@ extern Parameter Params;
 
 double roulette_fitness[MAXPSIZE];
 
+
 void random_selection(SOL **p1, SOL **p2);
 void roulette_selection(SOL **p1, SOL **p2);
+void tournament_selection(SOL **p1, SOL **p2);
+void rank_selection(SOL **p1, SOL **p2);
 
 void selection(SOL **p1, SOL **p2){
     switch (Params.selection){
@@ -19,6 +23,12 @@ void selection(SOL **p1, SOL **p2){
     case Roulette:
         roulette_selection(p1, p2);
         break;
+    case Tournament:
+        tournament_selection(p1, p2);
+        break;
+    case Rank:
+        rank_selection(p1, p2);
+        break;
     }
 }
 
@@ -27,7 +37,7 @@ void random_selection(SOL **p1, SOL **p2){
     *p2 = &Population[rand() % Psize];
 }
 
-int roulette_calc(double fit_sum, SOL **p){
+void roulette_calc(double fit_sum, SOL **p){
     for (int i = 0; i < Psize; i++){
         int point = rand() % (int)(fit_sum);
         int rand_sum = 0;
@@ -35,12 +45,11 @@ int roulette_calc(double fit_sum, SOL **p){
             rand_sum += roulette_fitness[i];
             if (rand_sum > point){
                 *p = &Population[i];
-                return i;
+                return;
             }
         }
     }
     *p = &Population[Psize-1];
-    return Psize - 1;
 }
 
 void roulette_selection(SOL **p1, SOL **p2){
@@ -51,9 +60,66 @@ void roulette_selection(SOL **p1, SOL **p2){
             ((WorstRec.f - Record.f) / (Params.roulette_k - 1));
         fit_sum += roulette_fitness[i];
     }
-    int idx1 = roulette_calc(fit_sum, p1);
-    int idx2 = roulette_calc(fit_sum, p2);
+    roulette_calc(fit_sum, p1);
+    roulette_calc(fit_sum, p2);
 
     //fprintf(stderr, "%f %f %f %f\n", 
     //  roulette_fitness[idx1] /fit_sum, roulette_fitness[idx2]/fit_sum, Record.f, WorstRec.f);
+}
+
+void tournament_selection(SOL **p1, SOL **p2){
+    int candidates = pow(2, Params.tournament_k);
+    int *selected = new int[candidates];
+    
+    for (int i = 0; i < candidates; i++){
+        selected[i] = rand() % Psize;
+    }
+
+    
+    for (int step = 0; step < Params.tournament_k - 1; step++){
+        candidates /= 2;
+        for (int i = 0; i < candidates; i++){
+            double f1 = Population[selected[2 * i]].f;
+            double f2 = Population[selected[2 * i + 1]].f;
+            double r = ((double)rand() / (RAND_MAX));
+            if (r < Params.tournament_t)
+                selected[i] = (f1 >= f2) ? selected[2 * i] : selected[2 * i + 1];
+            else
+                selected[i] = (f1 >= f2) ? selected[2 * i + 1] : selected[2 * i];
+        }
+    }
+
+    *p1 = &Population[selected[0]];
+    *p2 = &Population[selected[1]];
+
+    delete[] selected;
+}
+
+void rank_selection(SOL **p1, SOL **p2){
+    // calc fitness
+
+    struct SOL_sorter {
+        SOL sol;
+        int index;
+    };
+
+    SOL_sorter *tmp = new SOL_sorter[Psize];
+    for (int i = 0; i < Psize; i++) {
+        tmp[i].sol = Population[i];
+        tmp[i].index = i;
+    }
+    std::sort(tmp, tmp + Psize, [](SOL_sorter lhs, SOL_sorter rhs) {
+        return lhs.sol.f < rhs.sol.f;
+    });
+
+    double fit_sum = 0;
+    for (int i = 0; i < Psize; i++){
+        roulette_fitness[tmp[i].index] = Params.rank_max + 
+            i * (Params.rank_min - Params.rank_max) / (Psize - 1);
+        fit_sum += roulette_fitness[tmp[i].index];
+    }
+    roulette_calc(fit_sum, p1);
+    roulette_calc(fit_sum, p2);
+
+    delete[] tmp;
 }

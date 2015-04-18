@@ -19,10 +19,10 @@ extern double roulette_fitness[MAXPSIZE];
 long long TimeLimit;
 
 void print_sol(SOL *s, FILE* file) {
-    for (int i = 0; i < N; i++) {
+    /*for (int i = 0; i < N; i++) {
         if (i > 0) fprintf(file, " ");
         fprintf(file, "%d", s->ch[i] + 1);
-    }
+    }*/
     fprintf(file, " ----- %f\n", s->f);
 }
 
@@ -43,7 +43,7 @@ void GA() {
         //print_sol(p1, stderr);
         //print_sol(p2, stderr);
 		crossover(p1, p2, &c);
-        print_sol(&c, stderr);
+        print_sol(&Record, stderr);
 		mutation(&c);
 		replacement(&c);
 		Generation++;
@@ -92,8 +92,9 @@ void answer() {
 
 void init_params(int argc, char *argv[]){
     //Params.represent = LocusBase;
-    Params.selection = Roulette;
-    Params.roulette_k = 4;
+    Params.selection = Rank;
+    Params.rank_max = 200;
+    Params.rank_min = 20;
     Params.crossover = Cycle;
     if (argc == 1) return;
     for (int i = 1; i < argc; i++){
