@@ -1,7 +1,9 @@
 #include "ga.h"
+#include <chrono>
+#include <thread>
 
 int N;
-int Psize = 100;
+int Psize = 50;
 double X[MAXN], Y[MAXN];
 double Dist[MAXN][MAXN];
 int Near[MAXN];
@@ -40,13 +42,12 @@ void GA() {
 		if(time(NULL) - begin >= TimeLimit - 1) return; // end condition
 		SOL *p1, *p2;
 		selection(&p1, &p2);
-        //print_sol(p1, stderr);
-        //print_sol(p2, stderr);
 		crossover(p1, p2, &c);
-        print_sol(&Record, stderr);
-		mutation(&c);
+        mutation(&c);
 		replacement(&c);
 		Generation++;
+        print_stats();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 }
 

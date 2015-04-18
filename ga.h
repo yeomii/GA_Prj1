@@ -43,6 +43,8 @@ typedef struct {
     Termination termination;
 } Parameter;
 
+void print_stats();
+
 double eval(SOL *s);
 
 const char* str(enum Represent e);

@@ -1,11 +1,36 @@
 #include "ga.h"
+#include <numeric>
 
 extern int N;
+extern int Psize;
 extern double Dist[MAXN][MAXN];
+extern SOL Population[MAXPSIZE];
 extern SOL Record;
 extern SOL WorstRec;
 
 extern Parameter Params;
+
+void print_stats(){
+    double sum = [](SOL* pop, int size) {
+        double ret = 0.0;
+        for (int i = 0; i < size; i++) {
+            ret += pop[i].f;
+        }
+        return ret;
+    }(Population, Psize);
+    double mean = sum / Psize;
+
+    double sq_sum = [](SOL* pop, int size) {
+        double ret = 0.0;
+        for (int i = 0; i < size; i++) {
+            ret += pop[i].f * pop[i].f;
+        }
+        return ret;
+    }(Population, Psize);
+    double stdev = std::sqrt(sq_sum / Psize - mean * mean);
+
+    fprintf(stderr, " mean: %f stdev: %f\n", mean, stdev);
+}
 
 // calculate the fitness of s and store it into s->f
 double eval(SOL *s) {
