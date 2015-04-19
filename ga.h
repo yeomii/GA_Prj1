@@ -40,6 +40,7 @@ typedef struct {
     double mutation_b; // if larger than 1, non-uniform
 
     Replacement replacement;
+    double generation_gap; // if 0, steady-state GA and 1, generational GA 
     bool elitism;
 
     Termination termination;
@@ -67,5 +68,5 @@ void crossover(const SOL *p1, const SOL *p2, SOL *c);
 void mutation(SOL *s);
 
 void replacement(SOL *p1, SOL *p2, const SOL *offspr);
-
+void worst_generational_replacement(SOL* offsprs, int size);
 #endif

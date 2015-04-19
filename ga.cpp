@@ -3,10 +3,9 @@
 #include <thread>
 
 int N;
-int Psize = 50;
+int Psize = 100;
 double X[MAXN], Y[MAXN];
 double Dist[MAXN][MAXN];
-int Near[MAXN];
 
 SOL Population[MAXPSIZE];
 SOL Record;
@@ -32,27 +31,50 @@ void print_sol(SOL *s, FILE* file) {
 
 // a "steady-state" GA
 void GA() {
-	int i;
-	SOL c;
-	BeginTime = time(NULL);
+    int new_offspr = (int) Psize * Params.generation_gap;
+    SOL *offsprs = new SOL[Psize];
 
-	for (i = 0; i < Psize; i++) {
+	for (int i = 0; i < Psize; i++) {
 		gen_init_solution(&Population[i]);
 	}
 
-	while (1) {
-		if(time(NULL) - BeginTime >= TimeLimit - 1) return; // end condition
+    while (1){
+        if (time(NULL) - BeginTime >= TimeLimit - 1) return; // end condition
+
         sort_population();
-		SOL *p1, *p2;
-		selection(&p1, &p2);
-		crossover(p1, p2, &c);
-        mutation(&c);
-        //normalize_solution(&c);
-		replacement(p1, p2, &c);
-		Generation++;
+        if (new_offspr == 0){
+            SOL c;
+            SOL *p1, *p2;
+            selection(&p1, &p2);
+            crossover(p1, p2, &c);
+            mutation(&c);
+            normalize_solution(&c);
+            replacement(p1, p2, &c);
+
+        }
+        else{
+            for (int i = 0; i < new_offspr; i++)
+            {
+                if (time(NULL) - BeginTime >= TimeLimit - 1) return; // end condition
+                SOL *c = &offsprs[i];
+                SOL *p1, *p2;
+                selection(&p1, &p2);
+                crossover(p1, p2, c);
+                mutation(c);
+                normalize_solution(c);
+            }
+            if (Params.replacement == Worst){
+                worst_generational_replacement(offsprs, new_offspr);
+            }
+            else{
+                for (int i = 0; i < new_offspr; i++){
+                    replacement(NULL, NULL, &offsprs[i]);
+                }
+            }
+        }
+        Generation++;
         print_stats();
-        //std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	}
+    }
 }
 
 
@@ -74,6 +96,7 @@ void init() {
 	}
 	tmp = scanf("%lf", &time_limit);
 	TimeLimit = (long long) time_limit;
+    BeginTime = time(NULL);
 
 	Record.f = 1e100;
     WorstRec.f = -1.0;
@@ -109,17 +132,17 @@ void init_params(int argc, char *argv[]){
     
     Params.mutation = ChangeMix;
     Params.mutation_t = 0.05;
-    Params.mutation_b = 5;
+    Params.mutation_b = 1;
 
     Params.replacement = Worst;
+
+    Params.generation_gap = 0.2;
 
     if (argc == 1) return;
     for (int i = 1; i < argc; i++){
         fprintf(stderr, "%s\n", argv[i]);
     }
 }
-
-
 
 int main(int argc, char* argv[]) {
 	srand(time(NULL));

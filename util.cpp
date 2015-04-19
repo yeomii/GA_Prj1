@@ -4,6 +4,7 @@
 
 extern int N;
 extern int Psize;
+extern int Generation;
 extern double Dist[MAXN][MAXN];
 extern SOL Population[MAXPSIZE];
 extern SOL Record;
@@ -14,12 +15,11 @@ extern Parameter Params;
 int Q1idx, Q2idx, Q3idx;
 
 void print_stats(){
-    static int asdf = 0;
-    asdf++;
-    if (asdf % 10000 != 0)
+    static int last = Generation;
+    if (Generation - last < 100)
         return;
 
-    asdf = 0;
+    last = Generation;
     double sum = [](SOL* pop, int size) {
         double ret = 0.0;
         for (int i = 0; i < size; i++) {
@@ -55,13 +55,17 @@ void print_parameters(FILE *file){
         str(Params.mutation), str(Params.replacement), str(Params.termination));
 
     fs.clear();
-    fs.append("roulette_k : %d\n")
+    fs.append("population_size : %d\n")
+        .append("generation : %d\n")
+        .append("generation gap : %f\n")
+        .append("roulette_k : %d\n")
         .append("tournament_k : %d\t tournament_t : %f\n")
         .append("rank_max : %f\t rank_min : %f\n")
         .append("mutation_t : %f\t mutation_b : %f\n")
         .append("elitism : %d\n");
-    fprintf(file, fs.c_str(), Params.roulette_k, Params.tournament_k, Params.tournament_t,
-        Params.rank_max, Params.rank_min, Params.mutation_t, Params.mutation_b, Params.elitism);
+    fprintf(file, fs.c_str(), Psize, Generation, Params.generation_gap, Params.roulette_k, 
+        Params.tournament_k, Params.tournament_t, Params.rank_max, Params.rank_min, 
+        Params.mutation_t, Params.mutation_b, Params.elitism);
 }
 
 // calculate the fitness of s and store it into s->f

@@ -28,7 +28,9 @@ void replacement(SOL *p1, SOL *p2, const SOL *offspr){
 // replace one solution from the population with the new offspring
 // currently any random solution can be replaced
 void random_replacement(const SOL *offspr){
-	int i, p = rand() % Psize;
+	int p = rand() % Psize;
+    if (p == 0 && Params.elitism)
+        p++;
     memcpy(&Population[p], offspr, sizeof(SOL));
 }
 
@@ -38,8 +40,18 @@ void worst_replacement(const SOL *offspr){
 }
 
 void preselection_replacement(SOL *p1, SOL *p2, const SOL *offspr){
+    if (p1 == NULL || p2 == NULL){
+        random_replacement(offspr);
+        return;
+    }
     if (p1->f > p2->f)
         memcpy(p1, offspr, sizeof(SOL));
     else
         memcpy(p2, offspr, sizeof(SOL));
+}
+
+void worst_generational_replacement(SOL* offsprs, int size){
+    for (int i = 0; i < size; i++){
+        memcpy(&Population[Psize - i - 1], &offsprs[i], sizeof(SOL));
+    }
 }
