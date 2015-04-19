@@ -16,23 +16,17 @@ void print_stats(FILE *file){
     if (Generation % Params.print_freq != 0)
         return;
 
-    double sum = [](SOL* pop, int size) {
-        double ret = 0.0;
-        for (int i = 0; i < size; i++) {
-            ret += pop[i].f;
-        }
-        return ret;
-    }(Population, Psize);
+    double sum = 0.0;
+    for (int i = 0; i < Psize; i++) {
+        sum += Population[i].f;
+    }
     double mean = sum / Psize;
 
-    double sq_sum = [](SOL* pop, int size) {
-        double ret = 0.0;
-        for (int i = 0; i < size; i++) {
-            ret += pop[i].f * pop[i].f;
-        }
-        return ret;
-    }(Population, Psize);
-    double stdev = std::sqrt(sq_sum / Psize - mean * mean);
+    double sq_sum = 0.0;
+    for (int i = 0; i < Psize; i++) {
+        sq_sum += Population[i].f * Population[i].f;
+    }
+    double stdev = std::sqrt(sq_sum / (Psize - 1) - mean * mean);
 
     fprintf(file, "gen:%d q0:%.2f q1:%.2f q2:%.2f q3:%.2f q4:%.2f\navg:%.2f stdev:%.2f\n", 
         Generation,

@@ -1,5 +1,7 @@
 #include "ga.h"
 #include <set>
+#include <vector>
+using namespace std;
 
 extern int N;
 extern Parameter Params;
@@ -86,8 +88,8 @@ void order_crossover(const SOL *p1, const SOL* p2, SOL *c) {
 }
 
 void pmx_crossover(const SOL *p1, const SOL* p2, SOL *c) {
-    int left = rand() % (N - 1), gap = rand() % (N - left - 1);
-    int right = left + (gap != 0 ? gap : 1);
+	int left = rand() % (N - 1), gap = rand() % (N - left - 1);
+	int right = left + (gap != 0 ? gap : 1);
 
 	int *pos = new int[N];
 	memset(pos, -1, N * sizeof(int));
@@ -107,25 +109,22 @@ void pmx_crossover(const SOL *p1, const SOL* p2, SOL *c) {
 	delete[] pos;
 }
 
-// edge recombination은 order base representation에서만 의미를 가진다.
-void edge_recombination_crossover(const SOL *p1, const SOL* p2, SOL *c) {
-	std::set<int> adj[MAXN];
-	std::set<int> available_city;
-	
-	// 도시 c1, c2를 인접 도시로 등록한다.
-	auto reg = [&](int c1, int c2) {
+namespace edge_recomb 
+{
+		// 도시 c1, c2를 인접 도시로 등록한다.
+	void reg(vector< set<int> > &adj, int c1, int c2) {
 		adj[c1].insert(c2);
 		adj[c2].insert(c1);
-	};
+	}
 
 	// 도시 c1, c2를 인접 도시에서 삭제한다.
-	auto del = [&](int c1, int c2) {
+	void del(vector< set<int> > &adj, int c1, int c2) {
 		adj[c1].erase(c2);
 		adj[c2].erase(c1);
-	};
-	
+	}
+
 	// 현재 도시에서 가야 할 다음 도시를 반환한다.
-	auto next = [&](int city) {
+	int next(vector< set<int> > &adj, set<int> available_city, int city) {
 		available_city.erase(city);
 		if (adj[city].empty()) {
 			return available_city.empty() ? -1 : *available_city.begin();
@@ -141,19 +140,25 @@ void edge_recombination_crossover(const SOL *p1, const SOL* p2, SOL *c) {
 				}
 			}
 			while (!adj[city].empty())
-				del(city, *adj[city].begin());
+				del(adj, city, *adj[city].begin());
 			return best_city;
 		}
-	};
+	}
+}
 
+// edge recombination은 order base representation에서만 의미를 가진다.
+void edge_recombination_crossover(const SOL *p1, const SOL* p2, SOL *c) {
+	vector< set<int> > adj(MAXN, set<int>());
+	set<int> available_city;
+	
 	for (int i = 0; i < N; i++) {
 		available_city.insert(p1->ch[i]);
-		reg(p1->ch[i], p1->ch[(i + 1) % N]);
-		reg(p2->ch[i], p2->ch[(i + 1) % N]);
+		edge_recomb::reg(adj, p1->ch[i], p1->ch[(i + 1) % N]);
+		edge_recomb::reg(adj, p2->ch[i], p2->ch[(i + 1) % N]);
 	}
 
 	for (int curr_city = 0, i = 0; curr_city != -1;) {
 		c->ch[i++] = curr_city;
-		curr_city = next(curr_city);
+		curr_city = edge_recomb::next(adj, available_city, curr_city);
 	}
 }
