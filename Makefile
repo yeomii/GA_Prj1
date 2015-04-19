@@ -1,7 +1,7 @@
 all: ga
 
 ga: ga.cpp
-	g++ -o ga -O3 \
+	g++ -o ga -std=c++11 -O3 \
 	ga.h ga.cpp util.cpp gen.cpp crossover.cpp selection.cpp mutation.cpp replacement.cpp
 
 run: ga

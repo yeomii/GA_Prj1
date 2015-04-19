@@ -147,8 +147,8 @@ void init_params(int argc, char *argv[]){
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
     //
-    freopen("cycle.in", "r", stdin);
-    freopen("cycle.out", "w", stdout);
+    //freopen("cycle.in", "r", stdin);
+    //freopen("cycle.out", "w", stdout);
     //
     fprintf(stderr, "executing init with cycle.in...\n");
 	init();

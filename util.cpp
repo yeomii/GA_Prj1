@@ -16,7 +16,7 @@ int Q1idx, Q2idx, Q3idx;
 
 void print_stats(){
     static int last = Generation;
-    if (Generation - last < 100)
+    if (Generation - last < 10000)
         return;
 
     last = Generation;
