@@ -26,7 +26,7 @@ void print_stats(FILE *file){
     for (int i = 0; i < Psize; i++) {
         sq_sum += Population[i].f * Population[i].f;
     }
-    double stdev = std::sqrt(sq_sum / (Psize - 1) - mean * mean);
+    double stdev = sqrt(sq_sum / (Psize - 1) - mean * mean);
 
     fprintf(file, "gen:%d q0:%.2f q1:%.2f q2:%.2f q3:%.2f q4:%.2f\navg:%.2f stdev:%.2f\n", 
         Generation,
