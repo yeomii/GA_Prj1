@@ -3,7 +3,7 @@
 #include <thread>
 
 int N;
-int Psize = 100;
+int Psize;
 double X[MAXN], Y[MAXN];
 double Dist[MAXN][MAXN];
 
@@ -120,24 +120,23 @@ void answer() {
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
 
-    long long x = time(NULL);
-    char out[256], stat[256];
-    sprintf(out, "result_%lld.%d.out", N, x);
-    sprintf(stat, "trial_%lld.%d.out", N, x);
+  long long x = time(NULL);
+  char out[256], stat[256];
 
-    //
-    freopen("cycle.in", "r", stdin);
-    freopen(out, "w", stdout);
-    //
+  if (argc == 1) return 0;
 
-    if (argc == 1) return 0;
-
-    FILE* cf = fopen(argv[1], "r");
-    sf = fopen(stat, "w");
-
+  freopen("cycle.in", "r", stdin);
+	
 	init();
-    parse_parameters(cf);
-    print_parameters(sf);
+  sprintf(out, "result_%lld.%d.out", x, N);
+  sprintf(stat, "trial_%lld.%d.out", x, N);
+  //
+  freopen(out, "w", stdout);
+  FILE* cf = fopen(argv[1], "r");
+  sf = fopen(stat, "w");
+  //
+  parse_parameters(cf);
+  print_parameters(sf);
 	GA();
 	answer();
 	return 0;

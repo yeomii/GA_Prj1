@@ -66,7 +66,7 @@ void print_parameters(FILE *file){
 }
 
 void parse_parameters(FILE *file) {
-    fscanf(file, "s:%d c:%d m:%d r:%d rk:%d tk:%d tt:%lf rM:%lf rm:%lf mt:%lf mb:%lf gg:%lf pf:%d",
+    fscanf(file, "s:%d c:%d m:%d r:%d rk:%d tk:%d tt:%lf rM:%lf rm:%lf mt:%lf mb:%lf gg:%lf pf:%d ps:%d",
         &Params.selection,
         &Params.crossover,
         &Params.mutation,
@@ -79,7 +79,8 @@ void parse_parameters(FILE *file) {
         &Params.mutation_t,
         &Params.mutation_b,
         &Params.generation_gap,
-        &Params.print_freq);
+        &Params.print_freq,
+        &Psize);
 }
 
 // calculate the fitness of s and store it into s->f
