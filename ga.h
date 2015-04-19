@@ -44,10 +44,13 @@ typedef struct {
     double generation_gap; // if 0, steady-state GA and 1, generational GA 
 
     Termination termination;
+
+    int print_freq;
 } Parameter;
 
-void print_stats();
+void print_stats(FILE *file);
 void print_parameters(FILE *file);
+void parse_parameters(FILE *file);
 double eval(SOL *s);
 void sort_population();
 

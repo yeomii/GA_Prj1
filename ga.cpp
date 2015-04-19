@@ -14,11 +14,10 @@ SOL WorstRec;
 Parameter Params = {};
 int Generation = 0;
 
-extern int Q1idx, Q2idx, Q3idx;
-
 // Time limit for the test case
 long long TimeLimit;
 time_t BeginTime;
+FILE* sf;
 
 void print_sol(SOL *s, FILE* file) {
     for (int i = 0; i < N; i++) {
@@ -73,7 +72,7 @@ void GA() {
             }
         }
         Generation++;
-        print_stats();
+        print_stats(sf);
     }
 }
 
@@ -100,9 +99,6 @@ void init() {
 
 	Record.f = 1e100;
     WorstRec.f = -1.0;
-    Q1idx = (int)Psize / 4;
-    Q2idx = Q1idx + Q1idx;
-    Q3idx = Q2idx + Q1idx;
 }
 
 // print the best solution found to stdout
@@ -121,43 +117,28 @@ void answer() {
     print_sol(&Record, stdout);
 }
 
-void init_params(int argc, char *argv[]){
-    //Params.represent = LocusBase;
-
-    Params.selection = Tournament;
-    Params.tournament_k = 5;
-    Params.tournament_t = 0.7;
-    
-    Params.crossover = PMX;
-    
-    Params.mutation = ChangeMix;
-    Params.mutation_t = 0.05;
-    Params.mutation_b = 1;
-
-    Params.replacement = Worst;
-
-    Params.generation_gap = 0.2;
-
-    if (argc == 1) return;
-    for (int i = 1; i < argc; i++){
-        fprintf(stderr, "%s\n", argv[i]);
-    }
-}
-
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
+
+    long long x = time(NULL);
+    char out[256], stat[256];
+    sprintf(out, "result_%lld.%d.out", N, x);
+    sprintf(stat, "trial_%lld.%d.out", N, x);
+
     //
-    //freopen("cycle.in", "r", stdin);
-    //freopen("cycle.out", "w", stdout);
+    freopen("cycle.in", "r", stdin);
+    freopen(out, "w", stdout);
     //
-    fprintf(stderr, "executing init with cycle.in...\n");
+
+    if (argc == 1) return 0;
+
+    FILE* cf = fopen(argv[1], "r");
+    sf = fopen(stat, "w");
+
 	init();
-    fprintf(stderr, "initializing GA parameters...\n");
-    init_params(argc, argv);
-    print_parameters(stderr);
-    fprintf(stderr, "starting GA...\n");
+    parse_parameters(cf);
+    print_parameters(sf);
 	GA();
-    fprintf(stderr, "done\n");
 	answer();
 	return 0;
 }

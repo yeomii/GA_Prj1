@@ -12,14 +12,10 @@ extern SOL WorstRec;
 
 extern Parameter Params;
 
-int Q1idx, Q2idx, Q3idx;
-
-void print_stats(){
-    static int last = Generation;
-    if (Generation - last < 10000)
+void print_stats(FILE *file){
+    if (Generation % Params.print_freq != 0)
         return;
 
-    last = Generation;
     double sum = [](SOL* pop, int size) {
         double ret = 0.0;
         for (int i = 0; i < size; i++) {
@@ -38,8 +34,10 @@ void print_stats(){
     }(Population, Psize);
     double stdev = std::sqrt(sq_sum / Psize - mean * mean);
 
-    fprintf(stderr, " min: %.2f mean: %.2f stdev: %.2f   Q1: %.2f Q2: %.2f Q3: %.2f\n", Record.f, mean, stdev, 
-        Population[Q1idx].f, Population[Q2idx].f, Population[Q3idx].f);
+    fprintf(file, "gen:%d q0:%.2f q1:%.2f q2:%.2f q3:%.2f q4:%.2f\navg:%.2f stdev:%.2f\n", 
+        Generation,
+        Population[0].f, Population[Psize/4].f, Population[Psize/2].f, Population[3*Psize/4].f, Population[Psize-1].f,
+        mean, stdev);
 }
 
 void print_parameters(FILE *file){
@@ -65,6 +63,23 @@ void print_parameters(FILE *file){
     fprintf(file, fs.c_str(), Psize, Generation, Params.generation_gap, Params.roulette_k, 
         Params.tournament_k, Params.tournament_t, Params.rank_max, Params.rank_min, 
         Params.mutation_t, Params.mutation_b);
+}
+
+void parse_parameters(FILE *file) {
+    fscanf(file, "s:%d c:%d m:%d r:%d rk:%d tk:%d tt:%lf rM:%lf rm:%lf mt:%lf mb:%lf gg:%lf pf:%d",
+        &Params.selection,
+        &Params.crossover,
+        &Params.mutation,
+        &Params.replacement,
+        &Params.roulette_k,
+        &Params.tournament_k,
+        &Params.tournament_t,
+        &Params.rank_max,
+        &Params.rank_min,
+        &Params.mutation_t,
+        &Params.mutation_b,
+        &Params.generation_gap,
+        &Params.print_freq);
 }
 
 // calculate the fitness of s and store it into s->f
