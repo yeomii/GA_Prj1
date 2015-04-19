@@ -61,11 +61,10 @@ void print_parameters(FILE *file){
         .append("roulette_k : %d\n")
         .append("tournament_k : %d\t tournament_t : %f\n")
         .append("rank_max : %f\t rank_min : %f\n")
-        .append("mutation_t : %f\t mutation_b : %f\n")
-        .append("elitism : %d\n");
+        .append("mutation_t : %f\t mutation_b : %f\n");
     fprintf(file, fs.c_str(), Psize, Generation, Params.generation_gap, Params.roulette_k, 
         Params.tournament_k, Params.tournament_t, Params.rank_max, Params.rank_min, 
-        Params.mutation_t, Params.mutation_b, Params.elitism);
+        Params.mutation_t, Params.mutation_b);
 }
 
 // calculate the fitness of s and store it into s->f

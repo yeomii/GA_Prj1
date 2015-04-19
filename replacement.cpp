@@ -29,8 +29,6 @@ void replacement(SOL *p1, SOL *p2, const SOL *offspr){
 // currently any random solution can be replaced
 void random_replacement(const SOL *offspr){
 	int p = rand() % Psize;
-    if (p == 0 && Params.elitism)
-        p++;
     memcpy(&Population[p], offspr, sizeof(SOL));
 }
 

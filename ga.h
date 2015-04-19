@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
+#include <string.h>
 #include <string>
 using namespace std;
 
@@ -41,7 +42,6 @@ typedef struct {
 
     Replacement replacement;
     double generation_gap; // if 0, steady-state GA and 1, generational GA 
-    bool elitism;
 
     Termination termination;
 } Parameter;
