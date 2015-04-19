@@ -25,7 +25,7 @@ void print_sol(SOL *s, FILE* file) {
         fprintf(file, "%d", s->ch[i] + 1);
     }
     fprintf(file, "\n%f\n", s->f);
-    print_parameters(file);
+    //print_parameters(file);
 }
 
 // a "steady-state" GA
@@ -72,7 +72,7 @@ void GA() {
             }
         }
         Generation++;
-        print_stats(sf);
+        //print_stats(sf);
     }
 }
 
@@ -125,20 +125,20 @@ int main(int argc, char* argv[]) {
 
   if (argc == 1) return 0;
 
-  freopen("cycle.in", "r", stdin);
+  //freopen("cycle.in", "r", stdin);
 	
-	init();
-  sprintf(out, "result_%lld.%d.out", x, N);
-  sprintf(stat, "trial_%lld.%d.out", x, N);
+  init();
+  //sprintf(out, "result_%lld.%d.out", x, N);
+  //sprintf(stat, "trial_%lld.%d.out", x, N);
   //
-  freopen(out, "w", stdout);
+  //freopen(out, "w", stdout);
   FILE* cf = fopen(argv[1], "r");
-  sf = fopen(stat, "w");
+  //sf = fopen(stat, "w");
   //
   parse_parameters(cf);
   print_parameters(sf);
-	GA();
-	answer();
-	return 0;
+  GA();
+  answer();
+  return 0;
 }
 
