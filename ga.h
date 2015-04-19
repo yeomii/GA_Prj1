@@ -12,11 +12,11 @@ using namespace std;
 #define MAXN 318
 #define MAXPSIZE 1000
 
-enum Represent { OrderBase, LocusBase };
-enum Selection { RandomSelect, Roulette, Tournament, Rank };
-enum Crossover { Cycle, Order, PMX, EdgeRecombination };
-enum Mutation { ChangeTwo, ChangeOr, ChangeSwap, ChangeMix };
-enum Replacement { Random, Worst, Preselection };
+enum Represent { OrderBase = 0, LocusBase = 1 };
+enum Selection { RandomSelect = 0, Roulette = 1, Tournament = 2, Rank = 3 };
+enum Crossover { Cycle = 0, Order = 1, PMX = 2, EdgeRecombination = 3 };
+enum Mutation { ChangeTwo = 0, ChangeOr = 1, ChangeSwap = 2, ChangeMix = 3 };
+enum Replacement { Random = 0, Worst = 1, Preselection = 2 };
 enum Termination { LimitTime, GenNumber, Similarity };
 
 typedef struct {
