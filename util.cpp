@@ -42,6 +42,28 @@ void print_stats(){
         Population[Q1idx].f, Population[Q2idx].f, Population[Q3idx].f);
 }
 
+void print_parameters(FILE *file){
+    string fs;
+    fs.append("Represent : %s\n")
+        .append("Selection : %s\n")
+        .append("Crossover : %s\n")
+        .append("Mutation : %s\n")
+        .append("Replacement : %s\n")
+        .append("Termination : %s\n");
+    fprintf(file, fs.c_str(),
+        str(Params.represent), str(Params.selection), str(Params.crossover),
+        str(Params.mutation), str(Params.replacement), str(Params.termination));
+
+    fs.clear();
+    fs.append("roulette_k : %d\n")
+        .append("tournament_k : %d\t tournament_t : %f\n")
+        .append("rank_max : %f\t rank_min : %f\n")
+        .append("mutation_t : %f\t mutation_b : %f\n")
+        .append("elitism : %d\n");
+    fprintf(file, fs.c_str(), Params.roulette_k, Params.tournament_k, Params.tournament_t,
+        Params.rank_max, Params.rank_min, Params.mutation_t, Params.mutation_b, Params.elitism);
+}
+
 // calculate the fitness of s and store it into s->f
 double eval(SOL *s) {
 	s->f = 0;
@@ -86,21 +108,12 @@ const char* str(enum Represent e){
     default: return "";
     }
 }
-const char* str(enum GenSolution e){
-    switch (e)
-    {
-    case RandomGen: return "RandomGen";
-    case DFS: return "DFS";
-    default: return "";
-    }
-}
 const char* str(enum Selection e){
     switch (e){
     case RandomSelect: return "RandomSelect";
     case Roulette: return "Roulette";
     case Tournament: return "Tournament";
     case Rank: return "Rank";
-    case Sharing: return "Sharing";
     default: return "";
     }
 }
@@ -125,14 +138,15 @@ const char* str(enum Mutation e) {
 }
 const char* str(enum Replacement e) {
     switch (e) {
+    case Random: return "Random";
     case Worst: return "Worst";
     case Preselection: return "Preselection";
-    case Crowding: return "Crowding";
     default: return "";
     }
 }
 const char* str(enum Termination e) {
     switch (e) {
+    case LimitTime: return "LimitTime";
     case GenNumber: return "GenNumber"; 
     case Similarity: return "Similarity";
     default: return "";

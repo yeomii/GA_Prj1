@@ -12,11 +12,10 @@ using namespace std;
 #define MAXPSIZE 1000
 
 enum Represent { OrderBase, LocusBase };
-enum GenSolution { RandomGen, DFS };
-enum Selection { RandomSelect, Roulette, Tournament, Rank, Sharing };
+enum Selection { RandomSelect, Roulette, Tournament, Rank };
 enum Crossover { Cycle, Order, PMX, EdgeRecombination };
 enum Mutation { ChangeTwo, ChangeOr, ChangeSwap, ChangeMix };
-enum Replacement { Worst, Preselection, Crowding };
+enum Replacement { Random, Worst, Preselection };
 enum Termination { LimitTime, GenNumber, Similarity };
 
 typedef struct {
@@ -26,8 +25,6 @@ typedef struct {
 
 typedef struct {
     Represent represent;
-
-    GenSolution genSolution;
 
     Selection selection;
     int roulette_k;
@@ -43,16 +40,17 @@ typedef struct {
     double mutation_b; // if larger than 1, non-uniform
 
     Replacement replacement;
+    bool elitism;
 
     Termination termination;
 } Parameter;
 
 void print_stats();
+void print_parameters(FILE *file);
 double eval(SOL *s);
 void sort_population();
 
 const char* str(enum Represent e);
-const char* str(enum GenSolution e);
 const char* str(enum Selection e);
 const char* str(enum Crossover e);
 const char* str(enum Mutation e);
@@ -68,6 +66,6 @@ void crossover(const SOL *p1, const SOL *p2, SOL *c);
 
 void mutation(SOL *s);
 
-void replacement(const SOL *offspr);
+void replacement(SOL *p1, SOL *p2, const SOL *offspr);
 
 #endif

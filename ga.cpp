@@ -26,7 +26,8 @@ void print_sol(SOL *s, FILE* file) {
         if (i > 0) fprintf(file, " ");
         fprintf(file, "%d", s->ch[i] + 1);
     }
-    fprintf(file, " ----- %f\n", s->f);
+    fprintf(file, "\n%f\n", s->f);
+    print_parameters(file);
 }
 
 // a "steady-state" GA
@@ -46,8 +47,8 @@ void GA() {
 		selection(&p1, &p2);
 		crossover(p1, p2, &c);
         mutation(&c);
-        normalize_solution(&c);
-		replacement(&c);
+        //normalize_solution(&c);
+		replacement(p1, p2, &c);
 		Generation++;
         print_stats();
         //std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -110,25 +111,15 @@ void init_params(int argc, char *argv[]){
     Params.mutation_t = 0.05;
     Params.mutation_b = 5;
 
+    Params.replacement = Worst;
+
     if (argc == 1) return;
     for (int i = 1; i < argc; i++){
         fprintf(stderr, "%s\n", argv[i]);
     }
 }
 
-void print_parameters(){
-    string fs;
-    fs.append("Represent : %s\n")
-        .append("GenSolution : %s\n")
-        .append("Selection : %s\n")
-        .append("Crossover : %s\n")
-        .append("Mutation : %s\n")
-        .append("Replacement : %s\n")
-        .append("Termination : %s\n");
-    fprintf(stderr, fs.c_str(),
-        str(Params.represent), str(Params.genSolution), str(Params.selection),
-        str(Params.crossover), str(Params.mutation), str(Params.replacement), str(Params.termination));
-}
+
 
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
@@ -140,7 +131,7 @@ int main(int argc, char* argv[]) {
 	init();
     fprintf(stderr, "initializing GA parameters...\n");
     init_params(argc, argv);
-    print_parameters();
+    print_parameters(stderr);
     fprintf(stderr, "starting GA...\n");
 	GA();
     fprintf(stderr, "done\n");
