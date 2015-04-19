@@ -117,26 +117,27 @@ void answer() {
     print_sol(&Record, stdout);
 }
 
+void init_parameters(){
+  Params.selection = Tournament;
+  Params.crossover = EdgeRecombination;
+  Params.mutation = ChangeMix;
+  Params.replacement = Worst;
+  Params.tournament_k = 7;
+  Params.tournament_t = 0.7;
+  Params.mutation_t = 0.05;
+  Params.mutation_b = 3.0;
+  Params.generation_gap = 0.5;
+  Params.print_freq = 1000;
+  Psize = 100;
+}
+
 int main(int argc, char* argv[]) {
 	srand(time(NULL));
 
-  long long x = time(NULL);
-  char out[256], stat[256];
-
-  if (argc == 1) return 0;
-
-  //freopen("cycle.in", "r", stdin);
-	
   init();
-  //sprintf(out, "result_%lld.%d.out", x, N);
-  //sprintf(stat, "trial_%lld.%d.out", x, N);
-  //
-  //freopen(out, "w", stdout);
-  FILE* cf = fopen(argv[1], "r");
-  //sf = fopen(stat, "w");
-  //
-  parse_parameters(cf);
-  print_parameters(sf);
+  //FILE* cf = fopen("config", "r");
+  //parse_parameters(cf);
+  init_parameters();
   GA();
   answer();
   return 0;
