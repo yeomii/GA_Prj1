@@ -66,32 +66,28 @@ void cycle_crossover(const SOL *p1, const SOL *p2, SOL *c) {
 }
 
 void order_crossover(const SOL *p1, const SOL* p2, SOL *c) {
-	int left = rand() % N, right = rand() % N;
-	if (left > right) {
-		swap(left, right);
-		swap(p1, p2);
-	}
+    int left = rand() % (N - 1), gap = rand() % (N - left - 1);
+    int right = left + (gap != 0 ? gap : 1);
 
 	int *has = new int[N];
+    for (int i = 0; i < N; i++) has[i] = 0;
 	for (int i = left; i < right; i++) {
 		c->ch[i] = p1->ch[i];
 		has[p1->ch[i]] = true;
 	}
-	int i = 0;
-	for (int j = right; j != left; i = (i+1) % N) {
-		if (has[p2->ch[i]]) continue;
-		c->ch[j++] = p2->ch[i];
+	int k = 0;
+	for (int i = right; i != left; k = (k+1) % N) {
+		if (has[p2->ch[k]]) continue;
+		c->ch[i] = p2->ch[k];
+        i = (i + 1) % N;
 	}
 
 	delete[] has;
 }
 
 void pmx_crossover(const SOL *p1, const SOL* p2, SOL *c) {
-	int left = rand() % N, right = rand() % N;
-	if (left > right) {
-		swap(left, right);
-		swap(p1, p2);
-	}
+    int left = rand() % (N - 1), gap = rand() % (N - left - 1);
+    int right = left + (gap != 0 ? gap : 1);
 
 	int *pos = new int[N];
 	memset(pos, -1, N * sizeof(int));
@@ -102,8 +98,8 @@ void pmx_crossover(const SOL *p1, const SOL* p2, SOL *c) {
 	for (int i = right; i != left; i = (i+1) % N) {
 		int val = p2->ch[i];
 		while (pos[val] != -1) {
-			int next_pos = pos[p2->ch[i]];
-			val = p1->ch[next_pos];
+			int next_pos = pos[val];
+			val = p2->ch[next_pos];
 		}
 		c->ch[i] = val;
 	}

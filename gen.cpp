@@ -42,18 +42,20 @@ void gen_rand_locus_solution(SOL *s){
 }
 
 void normalize_solution(SOL *s){
-    int zero_index = 0;
-    for (int i = 0; i < N; i++){
-        if (s->ch[i] == 0){
-            zero_index = i;
-            break;
+    if (Params.represent == OrderBase){
+        int zero_index = 0;
+        for (int i = 0; i < N; i++){
+            if (s->ch[i] == 0){
+                zero_index = i;
+                break;
+            }
         }
+        if (zero_index == 0)
+            return;
+        int *temp = new int[N];
+        memcpy(temp, s->ch, N * sizeof(int));
+        memcpy(s->ch, temp + zero_index, (N - zero_index) * sizeof(int));
+        memcpy(s->ch + (N - zero_index), temp, zero_index * sizeof(int));
+        delete[] temp;
     }
-    if (zero_index == 0)
-        return;
-    int *temp = new int[N];
-    memcpy(temp, s->ch, N * sizeof(int));
-    memcpy(s->ch, temp + zero_index, (N - zero_index) * sizeof(int));
-    memcpy(s->ch + (N-zero_index), temp, zero_index * sizeof(int));
-    delete[] temp;
 }

@@ -1,5 +1,6 @@
 #include "ga.h"
 #include <numeric>
+#include <algorithm>
 
 extern int N;
 extern int Psize;
@@ -10,7 +11,15 @@ extern SOL WorstRec;
 
 extern Parameter Params;
 
+int Q1idx, Q2idx, Q3idx;
+
 void print_stats(){
+    static int asdf = 0;
+    asdf++;
+    if (asdf % 10000 != 0)
+        return;
+
+    asdf = 0;
     double sum = [](SOL* pop, int size) {
         double ret = 0.0;
         for (int i = 0; i < size; i++) {
@@ -29,7 +38,8 @@ void print_stats(){
     }(Population, Psize);
     double stdev = std::sqrt(sq_sum / Psize - mean * mean);
 
-    fprintf(stderr, " mean: %f stdev: %f\n", mean, stdev);
+    fprintf(stderr, " min: %.2f mean: %.2f stdev: %.2f   Q1: %.2f Q2: %.2f Q3: %.2f\n", Record.f, mean, stdev, 
+        Population[Q1idx].f, Population[Q2idx].f, Population[Q3idx].f);
 }
 
 // calculate the fitness of s and store it into s->f
@@ -61,6 +71,12 @@ double eval(SOL *s) {
     }
 
 	return s->f;
+}
+
+void sort_population(){
+    std::sort(Population, Population + Psize, [](SOL lhs, SOL rhs) {
+        return lhs.f < rhs.f;
+    });
 }
 
 const char* str(enum Represent e){
@@ -100,9 +116,10 @@ const char* str(enum Crossover e){
 }
 const char* str(enum Mutation e) {
     switch (e) {
-    case Uniform: return "Uniform";
-    case NonUniform: return "NonUniform";
-    case Change: return "Change";
+    case ChangeMix: return "ChangeMix";
+    case ChangeTwo: return "ChangeTwo";
+    case ChangeOr: return "ChangeOr";
+    case ChangeSwap: return "ChangeSwap";
     default: return "";
     }
 }

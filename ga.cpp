@@ -15,16 +15,17 @@ SOL WorstRec;
 Parameter Params = {};
 int Generation = 0;
 
-extern double roulette_fitness[MAXPSIZE];
+extern int Q1idx, Q2idx, Q3idx;
 
 // Time limit for the test case
 long long TimeLimit;
+time_t BeginTime;
 
 void print_sol(SOL *s, FILE* file) {
-    /*for (int i = 0; i < N; i++) {
+    for (int i = 0; i < N; i++) {
         if (i > 0) fprintf(file, " ");
         fprintf(file, "%d", s->ch[i] + 1);
-    }*/
+    }
     fprintf(file, " ----- %f\n", s->f);
 }
 
@@ -32,22 +33,24 @@ void print_sol(SOL *s, FILE* file) {
 void GA() {
 	int i;
 	SOL c;
-	time_t begin = time(NULL);
+	BeginTime = time(NULL);
 
 	for (i = 0; i < Psize; i++) {
 		gen_init_solution(&Population[i]);
 	}
 
 	while (1) {
-		if(time(NULL) - begin >= TimeLimit - 1) return; // end condition
+		if(time(NULL) - BeginTime >= TimeLimit - 1) return; // end condition
+        sort_population();
 		SOL *p1, *p2;
 		selection(&p1, &p2);
 		crossover(p1, p2, &c);
         mutation(&c);
+        normalize_solution(&c);
 		replacement(&c);
 		Generation++;
         print_stats();
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        //std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
 }
 
@@ -73,6 +76,9 @@ void init() {
 
 	Record.f = 1e100;
     WorstRec.f = -1.0;
+    Q1idx = (int)Psize / 4;
+    Q2idx = Q1idx + Q1idx;
+    Q3idx = Q2idx + Q1idx;
 }
 
 // print the best solution found to stdout
@@ -93,10 +99,17 @@ void answer() {
 
 void init_params(int argc, char *argv[]){
     //Params.represent = LocusBase;
-    Params.selection = Rank;
-    Params.rank_max = 200;
-    Params.rank_min = 20;
-    Params.crossover = Cycle;
+
+    Params.selection = Tournament;
+    Params.tournament_k = 5;
+    Params.tournament_t = 0.7;
+    
+    Params.crossover = PMX;
+    
+    Params.mutation = ChangeMix;
+    Params.mutation_t = 0.05;
+    Params.mutation_b = 5;
+
     if (argc == 1) return;
     for (int i = 1; i < argc; i++){
         fprintf(stderr, "%s\n", argv[i]);

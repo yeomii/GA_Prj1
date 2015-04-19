@@ -15,9 +15,9 @@ enum Represent { OrderBase, LocusBase };
 enum GenSolution { RandomGen, DFS };
 enum Selection { RandomSelect, Roulette, Tournament, Rank, Sharing };
 enum Crossover { Cycle, Order, PMX, EdgeRecombination };
-enum Mutation { Uniform, NonUniform, Change };
+enum Mutation { ChangeTwo, ChangeOr, ChangeSwap, ChangeMix };
 enum Replacement { Worst, Preselection, Crowding };
-enum Termination { GenNumber, Similarity };
+enum Termination { LimitTime, GenNumber, Similarity };
 
 typedef struct {
 	int ch[MAXN];
@@ -37,15 +37,19 @@ typedef struct {
     double rank_min;
 
     Crossover crossover;
+    
     Mutation mutation;
+    double mutation_t; // threshold
+    double mutation_b; // if larger than 1, non-uniform
+
     Replacement replacement;
 
     Termination termination;
 } Parameter;
 
 void print_stats();
-
 double eval(SOL *s);
+void sort_population();
 
 const char* str(enum Represent e);
 const char* str(enum GenSolution e);
@@ -56,6 +60,7 @@ const char* str(enum Replacement e);
 const char* str(enum Termination e);
 
 void gen_init_solution(SOL *s);
+void normalize_solution(SOL *s);
 
 void selection(SOL **p1, SOL **p2);
 
