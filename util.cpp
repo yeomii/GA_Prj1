@@ -108,10 +108,12 @@ double eval(SOL *s) {
 	return s->f;
 }
 
+bool sol_comp(SOL lhs, SOL rhs) {
+    return lhs.f < rhs.f;
+}
+
 void sort_population(){
-    std::sort(Population, Population + Psize, [](SOL lhs, SOL rhs) {
-        return lhs.f < rhs.f;
-    });
+    std::sort(Population, Population + Psize, sol_comp);
 }
 
 const char* str(enum Represent e){

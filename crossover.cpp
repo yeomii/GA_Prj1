@@ -132,7 +132,8 @@ namespace edge_recomb
 		else {
 			// 가장 인접 도시 수(즉 degree)가 적은 인접 도시를 고른다.
 			int best_city, min_degree = 5;
-			for (int adj_city : adj[city]) {
+            for (set<int>::iterator it = adj[city].begin(); it != adj[city].end(); it++) {
+                int adj_city = *it;
 				int degree = adj[adj_city].size();
 				if (degree < min_degree) {
 					min_degree = degree;
