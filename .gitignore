@@ -9,3 +9,6 @@ Debug/*
 
 cycle.*
 results/*
+
+*.in
+*.out
