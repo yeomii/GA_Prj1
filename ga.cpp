@@ -81,7 +81,7 @@ void GA() {
   }
 }
 
-void TwoOptExperiment(){
+void two_opt_experiment(){
   for (int i = 0; i < Psize; i++)
     gen_init_solution(&Population[i]);
 
@@ -96,6 +96,18 @@ void TwoOptExperiment(){
   }
   print_stats(sf);
   print_sol(&Record, sf);
+}
+
+void multistart_two_opt() {
+  for (int i = 0; i < Params.execution_n; i++) {
+    SOL c;
+    gen_init_solution(&c);
+    two_opt(&c);
+    eval(&c);
+    if (i % Params.print_freq == 0)
+      fprintf(sf, "%d gen -- %.2f\n", i, Record.f);
+  }
+  print_sol(&Record, stdout);
 }
 
 // read the test case from stdin
@@ -139,21 +151,22 @@ void answer() {
 }
 
 void init_parameters(){
-  Params.execution = HybridGA;
+  Params.execution = MultistartTwoOpt;
+  Params.execution_n = 100000;
   Params.selection = Tournament;
   Params.crossover = PMX;
   Params.mutation = ChangeMix;
-  Params.replacement = Worst;
+  Params.replacement = Preselection;
   Params.roulette_k = 5;
-  Params.tournament_k = 5;
-  Params.tournament_t = 0.6;//0.9
+  Params.tournament_k = 3;
+  Params.tournament_t = 0.8;//0.9
   Params.rank_max = 100.0;
   Params.rank_min = 1.0;
   Params.mutation_t = 0.1;
-  Params.mutation_b = 3;//3
+  Params.mutation_b = 4;//3
   Params.generation_gap = 0;
-  Params.print_freq = 10;
-  Psize = 200;
+  Params.print_freq = 100;
+  Psize = 100;
 }
 
 int main(int argc, char* argv[]) {
@@ -169,9 +182,11 @@ int main(int argc, char* argv[]) {
 
   switch (Params.execution){
   case TwoOpt:
-    TwoOptExperiment();
+    two_opt_experiment();
     break;
   case MultistartTwoOpt:
+    multistart_two_opt();
+    break;
   case HybridGA:
     GA();
     answer();

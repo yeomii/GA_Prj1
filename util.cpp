@@ -62,7 +62,9 @@ void print_parameters(FILE *file){
 }
 
 void parse_parameters(FILE *file) {
-    fscanf(file, "s:%d c:%d m:%d r:%d rk:%d tk:%d tt:%lf rM:%lf rm:%lf mt:%lf mb:%lf gg:%lf pf:%d ps:%d",
+    fscanf(file, "e:%d en:%d s:%d sn:%d c:%d m:%d r:%d rk:%d tk:%d tt:%lf rM:%lf rm:%lf mt:%lf mb:%lf gg:%lf pf:%d ps:%d",
+        &Params.execution,
+        &Params.execution_n,
         &Params.selection,
         &Params.crossover,
         &Params.mutation,
