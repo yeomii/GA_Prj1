@@ -16,6 +16,8 @@ void print_stats(FILE *file){
     if (Generation % Params.print_freq != 0)
         return;
 
+    sort_population();
+
     double sum = 0.0;
     for (int i = 0; i < Psize; i++) {
         sum += Population[i].f;
@@ -26,7 +28,7 @@ void print_stats(FILE *file){
     for (int i = 0; i < Psize; i++) {
         sq_sum += Population[i].f * Population[i].f;
     }
-    double stdev = sqrt(sq_sum / (Psize - 1) - mean * mean);
+    double stdev = sqrt(sq_sum / Psize - mean * mean);
 
     fprintf(file, "gen:%d q0:%.2f q1:%.2f q2:%.2f q3:%.2f q4:%.2f\navg:%.2f stdev:%.2f\n", 
         Generation,

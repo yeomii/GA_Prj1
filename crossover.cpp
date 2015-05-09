@@ -127,7 +127,7 @@ namespace edge_recomb
 	}
 
 	// 현재 도시에서 가야 할 다음 도시를 반환한다.
-	int next(vector< set<int> > &adj, set<int> available_city, int city) {
+	int next(vector< set<int> > &adj, set<int> &available_city, int city) {
 		available_city.erase(city);
 		if (adj[city].empty()) {
 			return available_city.empty() ? -1 : *available_city.begin();

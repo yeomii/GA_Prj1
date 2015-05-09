@@ -9,9 +9,10 @@
 #include <string>
 using namespace std;
 
-#define MAXN 318
+#define MAXN 700
 #define MAXPSIZE 1000
 
+enum Execution { TwoOpt = 0, MultistartTwoOpt = 1, HybridGA = 2 };
 enum Represent { OrderBase = 0, LocusBase = 1 };
 enum Selection { RandomSelect = 0, Roulette = 1, Tournament = 2, Rank = 3 };
 enum Crossover { Cycle = 0, Order = 1, PMX = 2, EdgeRecombination = 3 };
@@ -20,32 +21,34 @@ enum Replacement { Random = 0, Worst = 1, Preselection = 2 };
 enum Termination { LimitTime, GenNumber, Similarity };
 
 typedef struct {
-	int ch[MAXN];
-	double f;	
+  int ch[MAXN];
+  double f;
 } SOL;
 
 typedef struct {
-    Represent represent;
+  Execution execution;
 
-    Selection selection;
-    int roulette_k;
-    int tournament_k;
-    double tournament_t;
-    double rank_max;
-    double rank_min;
+  Represent represent;
 
-    Crossover crossover;
-    
-    Mutation mutation;
-    double mutation_t; // threshold
-    double mutation_b; // if larger than 1, non-uniform
+  Selection selection;
+  int roulette_k;
+  int tournament_k;
+  double tournament_t;
+  double rank_max;
+  double rank_min;
 
-    Replacement replacement;
-    double generation_gap; // if 0, steady-state GA and 1, generational GA 
+  Crossover crossover;
 
-    Termination termination;
+  Mutation mutation;
+  double mutation_t; // threshold
+  double mutation_b; // if larger than 1, non-uniform
 
-    int print_freq;
+  Replacement replacement;
+  double generation_gap; // if 0, steady-state GA and 1, generational GA 
+
+  Termination termination;
+
+  int print_freq;
 } Parameter;
 
 void print_stats(FILE *file);
@@ -72,4 +75,6 @@ void mutation(SOL *s);
 
 void replacement(SOL *p1, SOL *p2, const SOL *offspr);
 void worst_generational_replacement(SOL* offsprs, int size);
+
+void two_opt(SOL *s);
 #endif

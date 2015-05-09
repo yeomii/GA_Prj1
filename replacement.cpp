@@ -22,7 +22,6 @@ void replacement(SOL *p1, SOL *p2, const SOL *offspr){
         preselection_replacement(p1, p2, offspr);
         break;
     }
-	random_replacement(offspr);
 }
 
 // replace one solution from the population with the new offspring
@@ -34,6 +33,7 @@ void random_replacement(const SOL *offspr){
 
 void worst_replacement(const SOL *offspr){
     int worst = Psize - 1; // sorted population
+    sort_population();
     memcpy(&Population[worst], offspr, sizeof(SOL));
 }
 
