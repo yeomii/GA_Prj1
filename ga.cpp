@@ -118,15 +118,18 @@ void answer() {
 }
 
 void init_parameters(){
-  Params.selection = Tournament;
-  Params.crossover = EdgeRecombination;
+  Params.selection = Rank;
+  Params.crossover = PMX;
   Params.mutation = ChangeMix;
   Params.replacement = Worst;
-  Params.tournament_k = 7;
+  Params.roulette_k = 5;
+  Params.tournament_k = 5;
   Params.tournament_t = 0.7;
+  Params.rank_max = 100.0;
+  Params.rank_min = 1.0;
   Params.mutation_t = 0.05;
   Params.mutation_b = 3.0;
-  Params.generation_gap = 0.5;
+  Params.generation_gap = 0.7;
   Params.print_freq = 1000;
   Psize = 100;
 }

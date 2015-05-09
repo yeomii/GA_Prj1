@@ -13,7 +13,7 @@ void default_crossover(const SOL *p1, const SOL *p2, SOL *c);
 void cycle_crossover(const SOL *p1, const SOL *p2, SOL *c);
 void order_crossover(const SOL *p1, const SOL* p2, SOL *c);
 void pmx_crossover(const SOL *p1, const SOL* p2, SOL *c);
-
+void edge_recombination_crossover(const SOL *p1, const SOL* p2, SOL *c);
 
 void crossover(const SOL *p1, const SOL *p2, SOL *c) {
     switch (Params.crossover){
@@ -25,6 +25,9 @@ void crossover(const SOL *p1, const SOL *p2, SOL *c) {
         break;
     case PMX:
         pmx_crossover(p1, p2, c);
+        break;
+    case EdgeRecombination:
+        edge_recombination_crossover(p1, p2, c);
         break;
     default:
         default_crossover(p1, p2, c);
