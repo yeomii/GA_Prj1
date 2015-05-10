@@ -35,7 +35,7 @@ void GA() {
 
   for (int i = 0; i < Psize; i++) {
     gen_init_solution(&Population[i]);
-  }
+	}
 
   sort_population();
 
@@ -184,7 +184,8 @@ int parsing(int argc, char* argv[]){
 
 	freopen(argv[1], "r", stdin);
 	freopen(out, "w", stdout);
-	sf = fopen(stat, "w");
+	//sf = fopen(stat, "w");
+	sf = stderr;
 
 	printf("config : %s\n", argv[2]);
 	fprintf(sf, "config : %s\n", argv[2]);
