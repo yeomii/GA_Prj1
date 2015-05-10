@@ -170,7 +170,7 @@ void init_parameters(){
 
 int parsing(int argc, char* argv[]){
 	if (argc < 4){
-		printf("Usage : ./ga input config number");
+		printf("Usage : ./ga input config number\n");
 		return -1;
 	}
 	int n = atoi(argv[3]);
@@ -185,6 +185,9 @@ int parsing(int argc, char* argv[]){
 	freopen(argv[1], "r", stdin);
 	freopen(out, "w", stdout);
 	sf = fopen(stat, "w");
+
+	printf("config : %s\n", argv[2]);
+	fprintf(sf, "config : %s\n", argv[2]);
 	return 0;
 }
 
