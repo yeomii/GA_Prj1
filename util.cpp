@@ -38,13 +38,14 @@ void print_stats(FILE *file){
 
 void print_parameters(FILE *file){
     string fs;
-    fs.append("Represent : %s\n")
+    fs.append("Execution : %s\n")
+		.append("Represent : %s\n")
         .append("Selection : %s\n")
         .append("Crossover : %s\n")
         .append("Mutation : %s\n")
         .append("Replacement : %s\n")
         .append("Termination : %s\n");
-    fprintf(file, fs.c_str(),
+    fprintf(file, fs.c_str(), str(Params.execution),
         str(Params.represent), str(Params.selection), str(Params.crossover),
         str(Params.mutation), str(Params.replacement), str(Params.termination));
 
@@ -55,10 +56,11 @@ void print_parameters(FILE *file){
         .append("roulette_k : %d\n")
         .append("tournament_k : %d\t tournament_t : %f\n")
         .append("rank_max : %f\t rank_min : %f\n")
-        .append("mutation_t : %f\t mutation_b : %f\n");
+        .append("mutation_t : %f\t mutation_b : %f\n")
+		.append("execution_n : %d\n");
     fprintf(file, fs.c_str(), Psize, Generation, Params.generation_gap, Params.roulette_k, 
         Params.tournament_k, Params.tournament_t, Params.rank_max, Params.rank_min, 
-        Params.mutation_t, Params.mutation_b);
+        Params.mutation_t, Params.mutation_b, Params.execution_n);
 }
 
 void parse_parameters(FILE *file) {
@@ -172,3 +174,11 @@ const char* str(enum Termination e) {
     }
 }
 
+const char* str(enum Execution e) {
+	switch (e) {
+	case TwoOpt: return "TwoOpt";
+	case MultistartTwoOpt: return "MultistartTwoOpt";
+	case HybridGA: return "HybridGA";
+	default: return "";
+	}
+}

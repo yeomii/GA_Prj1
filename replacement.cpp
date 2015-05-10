@@ -55,6 +55,7 @@ void preselection_replacement(SOL *p1, SOL *p2, const SOL *offspr){
 }
 
 void worst_generational_replacement(SOL* offsprs, int size){
+	sort_population();
   for (int i = 0; i < size; i++){
     memcpy(&Population[Psize - i - 1], &offsprs[i], sizeof(SOL));
   }

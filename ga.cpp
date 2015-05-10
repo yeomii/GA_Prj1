@@ -25,7 +25,7 @@ void print_sol(SOL *s, FILE* file) {
     fprintf(file, "%d", s->ch[i] + 1);
   }
   fprintf(file, "\n%f\n", s->f);
-  //print_parameters(file);
+  print_parameters(file);
 }
 
 // a "steady-state" GA
@@ -76,7 +76,6 @@ void GA() {
       }
     }
     Generation++;
-    //sort_population(); //rank를 사용할 경우에만 매번 sort
     print_stats(sf);
   }
 }
@@ -169,17 +168,40 @@ void init_parameters(){
   Psize = 100;
 }
 
+int parsing(int argc, char* argv[]){
+	if (argc < 4){
+		printf("Usage : ./ga input config number");
+		return -1;
+	}
+	int n = atoi(argv[3]);
+	char out[256], stat[256];
+	sprintf(out, "result_%d.out", n);
+	sprintf(stat, "stat_%d.out", n);
+
+	FILE *cf = fopen(argv[2], "r");
+	parse_parameters(cf);
+	fclose(cf);
+
+	freopen(argv[1], "r", stdin);
+	freopen(out, "w", stdout);
+	sf = fopen(stat, "w");
+	return 0;
+}
+
 int main(int argc, char* argv[]) {
   srand(time(NULL));
 
-  freopen("cycle.in", "r", stdin);
-  freopen("cycle.out", "w", stdout);
-  sf = stderr;
+	//
+  if (parsing(argc, argv) < 0)
+		return 0;
+	//
   init();
-  //FILE* cf = fopen("config", "r");
-  //parse_parameters(cf);
-  init_parameters();
-
+  //init_parameters();
+  //
+	printf("N : %d\n", N);
+	fprintf(sf, "N : %d\n", N);
+	//
+	
   switch (Params.execution){
   case TwoOpt:
     two_opt_experiment();

@@ -64,6 +64,7 @@ const char* str(enum Crossover e);
 const char* str(enum Mutation e);
 const char* str(enum Replacement e);
 const char* str(enum Termination e);
+const char* str(enum Execution e);
 
 void gen_init_solution(SOL *s);
 void normalize_solution(SOL *s);

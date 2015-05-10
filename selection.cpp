@@ -96,7 +96,7 @@ void tournament_selection(SOL **p1, SOL **p2){
 }
 
 void rank_selection(SOL **p1, SOL **p2){
-    // already sorted
+		sort_population();
 
     double fit_sum = 0;
     for (int i = 0; i < Psize; i++){
