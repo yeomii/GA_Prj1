@@ -1,9 +1,8 @@
 all: ga
 
 ga: ga.cpp
-	g++ -o ga -std=c++0x -O3 \
+	g++ -o ga -std=c++0x -O3 -Wno-unused-result \
 	ga.h ga.cpp util.cpp gen.cpp crossover.cpp selection.cpp mutation.cpp replacement.cpp localopt.cpp
-	cp ga results/
 
 run: ga
 	./ga < cycle.in > cycle.out

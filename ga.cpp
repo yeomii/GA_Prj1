@@ -25,7 +25,7 @@ void print_sol(SOL *s, FILE* file) {
     fprintf(file, "%d", s->ch[i] + 1);
   }
   fprintf(file, "\n%f\n", s->f);
-  print_parameters(file);
+  //print_parameters(file);
 }
 
 // a "steady-state" GA
@@ -76,7 +76,7 @@ void GA() {
       }
     }
     Generation++;
-    print_stats(sf);
+    //print_stats(sf);
   }
 }
 
@@ -150,22 +150,22 @@ void answer() {
 }
 
 void init_parameters(){
-  Params.execution = MultistartTwoOpt;
-  Params.execution_n = 100000;
+  Params.execution = HybridGA;
+  Params.execution_n = 10;
   Params.selection = Tournament;
   Params.crossover = PMX;
   Params.mutation = ChangeMix;
-  Params.replacement = Preselection;
+  Params.replacement = Worst;
   Params.roulette_k = 5;
-  Params.tournament_k = 3;
-  Params.tournament_t = 0.8;//0.9
+  Params.tournament_k = 6;
+  Params.tournament_t = 0.8;
   Params.rank_max = 100.0;
   Params.rank_min = 1.0;
   Params.mutation_t = 0.1;
-  Params.mutation_b = 4;//3
-  Params.generation_gap = 0;
+  Params.mutation_b = 4;
+  Params.generation_gap = 0.9;
   Params.print_freq = 100;
-  Psize = 100;
+  Psize = 130;
 }
 
 int parsing(int argc, char* argv[]){
@@ -195,16 +195,16 @@ int parsing(int argc, char* argv[]){
 int main(int argc, char* argv[]) {
   srand(time(NULL));
 
-	//
+	/*
   if (parsing(argc, argv) < 0)
 		return 0;
-	//
+	*/
   init();
-  //init_parameters();
-  //
+  init_parameters();
+  /*
 	printf("N : %d\n", N);
 	fprintf(sf, "N : %d\n", N);
-	//
+	*/
 	
   switch (Params.execution){
   case TwoOpt:
